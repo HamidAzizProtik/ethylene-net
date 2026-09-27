@@ -1,48 +1,43 @@
-// Parsing Engine (src/Produce.cpp)
-
-// This file implements how data is read from disk into RAM.
-
-//     Include Headers: Include "Produce.hpp", <fstream> (LearnCpp 28.6), <iostream>, and <nlohmann/json.hpp>.
-
-//     File Stream Handling:
-
-//         Instantiate std::ifstream file(filepath).
-
-//         Guard Clause: Check if (!file.is_open()). If it fails, log an error to std::cerr and return an 
-//         empty or default struct.
-
-//     JSON Extraction:
-
-//         Instantiate an nlohmann::json object (e.g., nlohmann::json data).
-
-//         Parse the stream using file >> data; or nlohmann::json::parse(file).
-
-//     Struct Population:
-
-//         Declare a ProduceSpec spec;.
-
-//         Extract JSON values using .at("key").get<type>() or bracket operator data["key"] and assign them to 
-//         spec.name, spec.ethylene_ppm, and spec.decay_rate.
-
-//     Return: Return spec.
-
 #include "Produce.h"
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
+produceSpec load_produce_config(const std::string& filepath) {
+    // open file stream
+    std::ifstream file(filepath);
+    
+    // guard clause for missing/inaccessible files
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open file at " << filepath << "\n";
+        return {}; 
+    }
 
-produceSpec loadProduceConfig(const std::string& filepath) 
-{
-    std::ifstream readFile{ filepath };
-
-    if (!readFile)
-    {
-        std::cerr << "Error: could not find file at " << filepath << "\n";
+    // parse stream into nlohmann::json container (disabling exceptions)
+    nlohmann::json data = nlohmann::json::parse(file, nullptr, false);
+    if (data.is_discarded()) {
+        std::cerr << "Error: Malformed JSON syntax (invalid file format).\n";
         return {};
     }
 
-    json data = json::parse(readFile);
+    // check for missing keys using .contains()[cite: 1]
+    if (!data.contains("name") || !data.contains("ethylene_ppm") || !data.contains("decay_rate")) {
+        std::cerr << "Error: Missing one or more required keys in JSON file.\n";
+        return {};
+    }
 
+    // check for type mismatches before extracting
+    if (!data["name"].is_string() || !data["ethylene_ppm"].is_number() || !data["decay_rate"].is_number()) {
+        std::cerr << "Error: Type mismatch! Check your data types (strings vs numbers).\n";
+        return {};
+    }
+
+    // map JSON keys to struct fields 
+    produceSpec spec;
+    spec.name         = data["name"].get<std::string>();
+    spec.ethylene_ppm = data["ethylene_ppm"].get<double>();
+    spec.decay_rate   = data["decay_rate"].get<double>();
+
+    // return populated struct
+    return spec;
 }
