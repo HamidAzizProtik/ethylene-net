@@ -3,7 +3,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-produceSpec load_produce_config(const std::string& filepath) {
+produceSpec loadProduceConfig(const std::string& filepath) {
     // open file stream
     std::ifstream file(filepath);
     
