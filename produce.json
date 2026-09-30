@@ -1,5 +1,5 @@
-{
-    "name": "apple",
-    "ethylene_ppm": 0.52,
-    "decay_rate": 0.085
-}
+[
+    { "name": "Apple", "ethylene_ppm": 0.5, "decay_rate": 0.02 },
+    { "name": "Banana", "ethylene_ppm": 2.1, "decay_rate": 0.08 },
+    { "name": "Tomato", "ethylene_ppm": 1.2, "decay_rate": 0.05 }
+]

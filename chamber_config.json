@@ -1,0 +1,5 @@
+{
+    "volume_m3": 500.0,
+    "ach_airflow": 2.5,
+    "default_temp_c": 4.0
+}
