@@ -1,3 +1,27 @@
+// START MAIN:
+//     CREATE loader instance
+    
+//     LOAD produce database
+//     LOAD chamber database
+
+//     IF produce loaded successfully:
+//         GET entire_produce_dictionary FROM loader
+        
+//         FOR EACH [fruit_name, fruit_details] IN entire_produce_dictionary:
+//             PRINT fruit_name
+//             PRINT fruit_details.ethylene_ppm
+//             PRINT fruit_details.decay_rate
+
+//     IF chambers loaded successfully:
+//         GET entire_chamber_dictionary FROM loader
+        
+//         FOR EACH [chamber_name, chamber_details] IN entire_chamber_dictionary:
+//             PRINT chamber_name
+//             PRINT chamber_details.volume_m3
+//             PRINT chamber_details.ach_airflow
+
+// END MAIN
+
 #include "core/ConfigLoader.h"
 #include <iostream>
 
